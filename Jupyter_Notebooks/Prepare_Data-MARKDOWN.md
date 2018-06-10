@@ -1,0 +1,4092 @@
+
+
+```python
+import pandas as pd
+import os
+import numpy as np
+
+from flask import jsonify
+```
+
+
+```python
+
+
+bb_sampledata = r'''C:\Users\Marc\Desktop\Organize_GW_files\0.0 Current_HW\Interactive Visualizations\8_JUN_18\DataSets\belly_button_biodiversity_samples.csv'''
+bb_columndata = r'''C:\Users\Marc\Desktop\Organize_GW_files\0.0 Current_HW\Interactive Visualizations\8_JUN_18\DataSets\metadata_columns.csv'''
+
+# Read the CSV into a Pandas DataFrame
+
+
+ 
+bbcolumndata_df = pd.read_csv(bb_columndata)
+```
+
+
+```python
+cwd = os.getcwd()
+cwd
+```
+
+
+
+
+    'C:\\Users\\Marc\\Desktop\\Organize_GW_files\\0.0 Current_HW\\Interactive Visualizations\\8_JUN_18'
+
+
+
+
+```python
+data_dir_1 = cwd + '\\DataSets\\Belly_Button_Biodiversity_Metadata.csv'
+```
+
+
+```python
+data_dir_1
+```
+
+
+
+
+    'C:\\Users\\Marc\\Desktop\\Organize_GW_files\\0.0 Current_HW\\Interactive Visualizations\\8_JUN_18\\DataSets\\Belly_Button_Biodiversity_Metadata.csv'
+
+
+
+
+```python
+bbmetadate_df = pd.read_csv(data_dir_1)
+```
+
+
+```python
+bbmetadate_df.head()
+
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>SAMPLEID</th>
+      <th>EVENT</th>
+      <th>ETHNICITY</th>
+      <th>GENDER</th>
+      <th>AGE</th>
+      <th>WFREQ</th>
+      <th>BBTYPE</th>
+      <th>LOCATION</th>
+      <th>COUNTRY012</th>
+      <th>ZIP012</th>
+      <th>...</th>
+      <th>DOG</th>
+      <th>CAT</th>
+      <th>IMPSURFACE013</th>
+      <th>NPP013</th>
+      <th>MMAXTEMP013</th>
+      <th>PFC013</th>
+      <th>IMPSURFACE1319</th>
+      <th>NPP1319</th>
+      <th>MMAXTEMP1319</th>
+      <th>PFC1319</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>940</td>
+      <td>BellyButtonsScienceOnline</td>
+      <td>Caucasian</td>
+      <td>F</td>
+      <td>24.0</td>
+      <td>2.0</td>
+      <td>I</td>
+      <td>Beaufort/NC</td>
+      <td>usa</td>
+      <td>22306</td>
+      <td>...</td>
+      <td>no</td>
+      <td>no</td>
+      <td>8852.0</td>
+      <td>37.172222</td>
+      <td>54.5</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>33.990002</td>
+      <td>25.5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>941</td>
+      <td>NaN</td>
+      <td>Caucasian/Midleastern</td>
+      <td>F</td>
+      <td>34.0</td>
+      <td>1.0</td>
+      <td>I</td>
+      <td>Chicago/IL</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>943</td>
+      <td>BellyButtonsScienceOnline</td>
+      <td>Caucasian</td>
+      <td>F</td>
+      <td>49.0</td>
+      <td>1.0</td>
+      <td>I</td>
+      <td>Omaha/NE</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>944</td>
+      <td>BellyButtonsScienceOnline</td>
+      <td>European</td>
+      <td>M</td>
+      <td>44.0</td>
+      <td>1.0</td>
+      <td>I</td>
+      <td>NewHaven/CT</td>
+      <td>usa</td>
+      <td>7079</td>
+      <td>...</td>
+      <td>no</td>
+      <td>yes</td>
+      <td>NaN</td>
+      <td>35.816666</td>
+      <td>16.0</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>6567.0</td>
+      <td>32.403332</td>
+      <td>28.5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>945</td>
+      <td>BellyButtonsScienceOnline</td>
+      <td>Caucasian</td>
+      <td>F</td>
+      <td>48.0</td>
+      <td>1.0</td>
+      <td>I</td>
+      <td>Philidelphia/PA</td>
+      <td>usa</td>
+      <td>84404</td>
+      <td>...</td>
+      <td>no</td>
+      <td>no</td>
+      <td>NaN</td>
+      <td>37.783333</td>
+      <td>4.0</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>5613.0</td>
+      <td>33.634445</td>
+      <td>24.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 22 columns</p>
+</div>
+
+
+
+
+```python
+sample_df= bbmetadate_df.drop(columns=['EVENT', 'COUNTRY012', 'ZIP012','DOG', 'CAT', 'IMPSURFACE013',
+                                       'NPP013', 'MMAXTEMP013','PFC013', 'IMPSURFACE1319','NPP1319', 'MMAXTEMP1319', 'PFC1319',
+                                      'COUNTRY1319', 'ZIP1319'])
+
+sample_df.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>SAMPLEID</th>
+      <th>ETHNICITY</th>
+      <th>GENDER</th>
+      <th>AGE</th>
+      <th>WFREQ</th>
+      <th>BBTYPE</th>
+      <th>LOCATION</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>940</td>
+      <td>Caucasian</td>
+      <td>F</td>
+      <td>24.0</td>
+      <td>2.0</td>
+      <td>I</td>
+      <td>Beaufort/NC</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>941</td>
+      <td>Caucasian/Midleastern</td>
+      <td>F</td>
+      <td>34.0</td>
+      <td>1.0</td>
+      <td>I</td>
+      <td>Chicago/IL</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>943</td>
+      <td>Caucasian</td>
+      <td>F</td>
+      <td>49.0</td>
+      <td>1.0</td>
+      <td>I</td>
+      <td>Omaha/NE</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>944</td>
+      <td>European</td>
+      <td>M</td>
+      <td>44.0</td>
+      <td>1.0</td>
+      <td>I</td>
+      <td>NewHaven/CT</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>945</td>
+      <td>Caucasian</td>
+      <td>F</td>
+      <td>48.0</td>
+      <td>1.0</td>
+      <td>I</td>
+      <td>Philidelphia/PA</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+sample_id = 'BB_940'
+sample_id
+```
+
+
+
+
+    'BB_940'
+
+
+
+
+```python
+sample_id[3:]
+```
+
+
+
+
+    '940'
+
+
+
+
+```python
+sample = int(sample_id[3:])
+
+sample_df.loc[sample_df['SAMPLEID'] == sample]
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>SAMPLEID</th>
+      <th>ETHNICITY</th>
+      <th>GENDER</th>
+      <th>AGE</th>
+      <th>WFREQ</th>
+      <th>BBTYPE</th>
+      <th>LOCATION</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>940</td>
+      <td>Caucasian</td>
+      <td>F</td>
+      <td>24.0</td>
+      <td>2.0</td>
+      <td>I</td>
+      <td>Beaufort/NC</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+sample_dic = {}
+sample_dic['SAMPLEID'] = sample_df.iloc[0]['SAMPLEID']
+sample_dic['ETHNICITY'] = sample_df.iloc[0]['ETHNICITY']
+sample_dic['GENDER'] = sample_df.iloc[0]['GENDER']
+sample_dic['AGE'] = sample_df.iloc[0]['AGE']
+sample_dic['BBTYPE'] = sample_df.iloc[0]['BBTYPE']
+sample_dic['LOCATION'] = sample_df.iloc[0]['LOCATION']
+```
+
+
+```python
+sample_dic
+```
+
+
+
+
+    {'AGE': 24.0,
+     'BBTYPE': 'I',
+     'ETHNICITY': 'Caucasian',
+     'GENDER': 'F',
+     'LOCATION': 'Beaufort/NC',
+     'SAMPLEID': 940}
+
+
+
+
+```python
+wash_freq =  int(sample_df.iloc[0]['WFREQ'])
+wash_freq
+```
+
+
+
+
+    2
+
+
+
+
+```python
+data_dir = cwd + '\\DataSets\\belly_button_biodiversity_otu_id.csv'
+bbotudata_df = pd.read_csv(data_dir)
+bbotudata_df.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>otu_id</th>
+      <th>lowest_taxonomic_unit_found</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Archaea;Euryarchaeota;Halobacteria;Halobacteri...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Archaea;Euryarchaeota;Halobacteria;Halobacteri...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Archaea;Euryarchaeota;Halobacteria;Halobacteri...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Archaea;Euryarchaeota;Methanobacteria;Methanob...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Archaea;Euryarchaeota;Methanobacteria;Methanob...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+list(bbotudata_df['lowest_taxonomic_unit_found'])
+```
+
+
+
+
+    ['Archaea;Euryarchaeota;Halobacteria;Halobacteriales;Halobacteriaceae;Halococcus',
+     'Archaea;Euryarchaeota;Halobacteria;Halobacteriales;Halobacteriaceae;Halococcus',
+     'Archaea;Euryarchaeota;Halobacteria;Halobacteriales;Halobacteriaceae;Natronorubrum',
+     'Archaea;Euryarchaeota;Methanobacteria;Methanobacteriales;Methanobacteriaceae;Methanobrevibacter',
+     'Archaea;Euryarchaeota;Methanobacteria;Methanobacteriales;Methanobacteriaceae;Methanobrevibacter',
+     'Archaea;Euryarchaeota;Methanobacteria;Methanobacteriales;Methanobacteriaceae;Methanobrevibacter',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp1;Gp1',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp1;Gp1',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp1;Gp1',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp1;Gp1',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp1;Gp1',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp10;Gp10',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp16;Gp16',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp16;Gp16',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp16;Gp16',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp2;Gp2',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp2;Gp2',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp2;Gp2',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp2;Gp2',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp2;Gp2',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp2;Gp2',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp3;Gp3',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp3;Gp3',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp3;Gp3',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp3;Gp3',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp4;Gp4',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp4;Gp4',
+     'Bacteria;Acidobacteria;Acidobacteria_Gp6;Gp6',
+     'Bacteria;Actinobacteria;Actinobacteria',
+     'Bacteria;Actinobacteria;Actinobacteria',
+     'Bacteria;Actinobacteria;Actinobacteria',
+     'Bacteria;Actinobacteria;Actinobacteria',
+     'Bacteria;Actinobacteria;Actinobacteria',
+     'Bacteria;Actinobacteria;Actinobacteria',
+     'Bacteria;Actinobacteria;Actinobacteria',
+     'Bacteria;Actinobacteria;Actinobacteria',
+     'Bacteria;Actinobacteria;Actinobacteria',
+     'Bacteria;Actinobacteria;Actinobacteria;Acidimicrobiales',
+     'Bacteria;Actinobacteria;Actinobacteria;Acidimicrobiales;Iamiaceae;Iamia',
+     'Bacteria;Actinobacteria;Actinobacteria;Acidimicrobidae_incertae_sedis;Ilumatobacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Actinobaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Actinobaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Actinobaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Actinomyces',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Actinomyces',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Actinomyces',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Actinomyces',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Actinomyces',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Actinomyces',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Actinomyces',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Actinomyces',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Arcanobacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Mobiluncus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Mobiluncus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Mobiluncus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Mobiluncus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Mobiluncus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Mobiluncus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Mobiluncus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Mobiluncus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Mobiluncus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Mobiluncus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Mobiluncus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Mobiluncus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Actinomycetaceae;Varibaculum',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Bogoriellaceae;Georgenia',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Brevibacteriaceae;Brevibacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Brevibacteriaceae;Brevibacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Brevibacteriaceae;Brevibacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Cellulomonadaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Corynebacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Turicella',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Turicella',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Corynebacteriaceae;Turicella',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Brachybacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Brachybacterium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermabacteraceae;Dermabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermacoccaceae;Dermacoccus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermacoccaceae;Dermacoccus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermacoccaceae;Kytococcus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dermacoccaceae;Kytococcus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Dietziaceae;Dietzia',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Intrasporangiaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Intrasporangiaceae;Arsenicicoccus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Intrasporangiaceae;Janibacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Intrasporangiaceae;Ornithinimicrobium',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Intrasporangiaceae;Phycicoccus',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Intrasporangiaceae;Terrabacter',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Kineosporiaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Kineosporiaceae;Quadrisphaera',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae',
+     'Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;Microbacteriaceae;Zimmermannella',
+     ...]
+
+
+
+
+```python
+data_dir = cwd + '\\DataSets\\belly_button_biodiversity_samples.csv'
+bbsampledata_df = pd.read_csv(data_dir)
+
+bbsampledata_df.head(2859)
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>otu_id</th>
+      <th>BB_940</th>
+      <th>BB_941</th>
+      <th>BB_943</th>
+      <th>BB_944</th>
+      <th>BB_945</th>
+      <th>BB_946</th>
+      <th>BB_947</th>
+      <th>BB_948</th>
+      <th>BB_949</th>
+      <th>...</th>
+      <th>BB_1562</th>
+      <th>BB_1563</th>
+      <th>BB_1564</th>
+      <th>BB_1572</th>
+      <th>BB_1573</th>
+      <th>BB_1574</th>
+      <th>BB_1576</th>
+      <th>BB_1577</th>
+      <th>BB_1581</th>
+      <th>BB_1601</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>9</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>10</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>11</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>12</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>13</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>14</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>15</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>16</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>17</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>18</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>19</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>20</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>21</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>22</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>23</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>24</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>25</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>26</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>27</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>28</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>29</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>30</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2829</th>
+      <td>2830</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2830</th>
+      <td>2831</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2831</th>
+      <td>2832</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2832</th>
+      <td>2833</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2833</th>
+      <td>2834</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2834</th>
+      <td>2835</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2835</th>
+      <td>2836</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2836</th>
+      <td>2837</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2837</th>
+      <td>2838</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2838</th>
+      <td>2839</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2839</th>
+      <td>2840</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2840</th>
+      <td>2841</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2841</th>
+      <td>2842</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2842</th>
+      <td>2843</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2843</th>
+      <td>2844</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2844</th>
+      <td>2845</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>3</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2845</th>
+      <td>2846</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2846</th>
+      <td>2847</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2847</th>
+      <td>2848</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2848</th>
+      <td>2849</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2849</th>
+      <td>2850</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2850</th>
+      <td>2851</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2851</th>
+      <td>2852</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2852</th>
+      <td>2853</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2853</th>
+      <td>2854</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2854</th>
+      <td>2855</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2855</th>
+      <td>2856</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2856</th>
+      <td>2857</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2857</th>
+      <td>2858</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2858</th>
+      <td>2859</td>
+      <td>126.0</td>
+      <td>21</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>195</td>
+      <td>200</td>
+      <td>47.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>19</td>
+      <td>0</td>
+      <td>14</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>2859 rows × 154 columns</p>
+</div>
+
+
+
+
+```python
+sample = 'BB_961'
+
+bbsampledata_df[sample]
+```
+
+
+
+
+    0       0
+    1       0
+    2       0
+    3       0
+    4       0
+    5       0
+    6       0
+    7       0
+    8       0
+    9       0
+    10      0
+    11      0
+    12      0
+    13      0
+    14      0
+    15      0
+    16      0
+    17      0
+    18      0
+    19      0
+    20      0
+    21      0
+    22      0
+    23      0
+    24      0
+    25      0
+    26      0
+    27      0
+    28      0
+    29      0
+           ..
+    3644    0
+    3645    0
+    3646    0
+    3647    0
+    3648    0
+    3649    0
+    3650    0
+    3651    0
+    3652    0
+    3653    0
+    3654    0
+    3655    0
+    3656    0
+    3657    0
+    3658    0
+    3659    0
+    3660    0
+    3661    0
+    3662    0
+    3663    0
+    3664    0
+    3665    0
+    3666    0
+    3667    0
+    3668    0
+    3669    0
+    3670    0
+    3671    0
+    3672    0
+    3673    0
+    Name: BB_961, Length: 3674, dtype: int64
+
+
+
+
+```python
+clean_sample_df = bbsampledata_df[bbsampledata_df[sample] > 1]
+clean_sample_df
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>otu_id</th>
+      <th>BB_940</th>
+      <th>BB_941</th>
+      <th>BB_943</th>
+      <th>BB_944</th>
+      <th>BB_945</th>
+      <th>BB_946</th>
+      <th>BB_947</th>
+      <th>BB_948</th>
+      <th>BB_949</th>
+      <th>...</th>
+      <th>BB_1562</th>
+      <th>BB_1563</th>
+      <th>BB_1564</th>
+      <th>BB_1572</th>
+      <th>BB_1573</th>
+      <th>BB_1574</th>
+      <th>BB_1576</th>
+      <th>BB_1577</th>
+      <th>BB_1581</th>
+      <th>BB_1601</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>829</th>
+      <td>830</td>
+      <td>10.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6</td>
+      <td>28</td>
+      <td>3</td>
+      <td>15.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>908</th>
+      <td>909</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7</td>
+      <td>116</td>
+      <td>7</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>14</td>
+      <td>0</td>
+      <td>18</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>921</th>
+      <td>922</td>
+      <td>1.0</td>
+      <td>27</td>
+      <td>1</td>
+      <td>278</td>
+      <td>129</td>
+      <td>1</td>
+      <td>45</td>
+      <td>185.0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>53</td>
+      <td>50</td>
+      <td>0</td>
+      <td>0</td>
+      <td>92</td>
+      <td>13</td>
+      <td>0</td>
+      <td>152</td>
+      <td>0</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>943</th>
+      <td>944</td>
+      <td>19.0</td>
+      <td>178</td>
+      <td>0</td>
+      <td>8</td>
+      <td>274</td>
+      <td>7</td>
+      <td>135</td>
+      <td>9.0</td>
+      <td>4</td>
+      <td>...</td>
+      <td>156</td>
+      <td>0</td>
+      <td>22</td>
+      <td>13</td>
+      <td>0</td>
+      <td>15</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>1054</th>
+      <td>1055</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1166</th>
+      <td>1167</td>
+      <td>163.0</td>
+      <td>24</td>
+      <td>0</td>
+      <td>0</td>
+      <td>32</td>
+      <td>217</td>
+      <td>27</td>
+      <td>18.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>93</td>
+      <td>0</td>
+      <td>14</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>73</td>
+    </tr>
+    <tr>
+      <th>1313</th>
+      <td>1314</td>
+      <td>3.0</td>
+      <td>28</td>
+      <td>0</td>
+      <td>0</td>
+      <td>20</td>
+      <td>100</td>
+      <td>11</td>
+      <td>10.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>61</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1599</th>
+      <td>1600</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>2</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1723</th>
+      <td>1724</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>2</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1727</th>
+      <td>1728</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1787</th>
+      <td>1788</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1794</th>
+      <td>1795</td>
+      <td>10.0</td>
+      <td>40</td>
+      <td>2</td>
+      <td>11</td>
+      <td>141</td>
+      <td>2</td>
+      <td>102</td>
+      <td>8.0</td>
+      <td>3</td>
+      <td>...</td>
+      <td>143</td>
+      <td>1</td>
+      <td>537</td>
+      <td>26</td>
+      <td>3</td>
+      <td>14</td>
+      <td>1</td>
+      <td>130</td>
+      <td>176</td>
+      <td>97</td>
+    </tr>
+    <tr>
+      <th>2418</th>
+      <td>2419</td>
+      <td>13.0</td>
+      <td>162</td>
+      <td>0</td>
+      <td>0</td>
+      <td>110</td>
+      <td>36</td>
+      <td>412</td>
+      <td>55.0</td>
+      <td>8</td>
+      <td>...</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>5</td>
+      <td>16</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>2538</th>
+      <td>2539</td>
+      <td>1.0</td>
+      <td>92</td>
+      <td>0</td>
+      <td>0</td>
+      <td>10</td>
+      <td>18</td>
+      <td>23</td>
+      <td>9.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>2721</th>
+      <td>2722</td>
+      <td>8.0</td>
+      <td>194</td>
+      <td>0</td>
+      <td>2</td>
+      <td>35</td>
+      <td>114</td>
+      <td>236</td>
+      <td>64.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>2858</th>
+      <td>2859</td>
+      <td>126.0</td>
+      <td>21</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>195</td>
+      <td>200</td>
+      <td>47.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>19</td>
+      <td>0</td>
+      <td>14</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3540</th>
+      <td>3541</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+      <td>5</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>17 rows × 154 columns</p>
+</div>
+
+
+
+
+```python
+#Sample is BB_940
+clean_sample_df = clean_sample_df.sort_values(by=sample, ascending=0)
+clean_sample_df
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>otu_id</th>
+      <th>BB_940</th>
+      <th>BB_941</th>
+      <th>BB_943</th>
+      <th>BB_944</th>
+      <th>BB_945</th>
+      <th>BB_946</th>
+      <th>BB_947</th>
+      <th>BB_948</th>
+      <th>BB_949</th>
+      <th>...</th>
+      <th>BB_1562</th>
+      <th>BB_1563</th>
+      <th>BB_1564</th>
+      <th>BB_1572</th>
+      <th>BB_1573</th>
+      <th>BB_1574</th>
+      <th>BB_1576</th>
+      <th>BB_1577</th>
+      <th>BB_1581</th>
+      <th>BB_1601</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1794</th>
+      <td>1795</td>
+      <td>10.0</td>
+      <td>40</td>
+      <td>2</td>
+      <td>11</td>
+      <td>141</td>
+      <td>2</td>
+      <td>102</td>
+      <td>8.0</td>
+      <td>3</td>
+      <td>...</td>
+      <td>143</td>
+      <td>1</td>
+      <td>537</td>
+      <td>26</td>
+      <td>3</td>
+      <td>14</td>
+      <td>1</td>
+      <td>130</td>
+      <td>176</td>
+      <td>97</td>
+    </tr>
+    <tr>
+      <th>2721</th>
+      <td>2722</td>
+      <td>8.0</td>
+      <td>194</td>
+      <td>0</td>
+      <td>2</td>
+      <td>35</td>
+      <td>114</td>
+      <td>236</td>
+      <td>64.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>908</th>
+      <td>909</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7</td>
+      <td>116</td>
+      <td>7</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>14</td>
+      <td>0</td>
+      <td>18</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>2858</th>
+      <td>2859</td>
+      <td>126.0</td>
+      <td>21</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>195</td>
+      <td>200</td>
+      <td>47.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>19</td>
+      <td>0</td>
+      <td>14</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1313</th>
+      <td>1314</td>
+      <td>3.0</td>
+      <td>28</td>
+      <td>0</td>
+      <td>0</td>
+      <td>20</td>
+      <td>100</td>
+      <td>11</td>
+      <td>10.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>61</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1723</th>
+      <td>1724</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>2</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>943</th>
+      <td>944</td>
+      <td>19.0</td>
+      <td>178</td>
+      <td>0</td>
+      <td>8</td>
+      <td>274</td>
+      <td>7</td>
+      <td>135</td>
+      <td>9.0</td>
+      <td>4</td>
+      <td>...</td>
+      <td>156</td>
+      <td>0</td>
+      <td>22</td>
+      <td>13</td>
+      <td>0</td>
+      <td>15</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>2538</th>
+      <td>2539</td>
+      <td>1.0</td>
+      <td>92</td>
+      <td>0</td>
+      <td>0</td>
+      <td>10</td>
+      <td>18</td>
+      <td>23</td>
+      <td>9.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>1727</th>
+      <td>1728</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>829</th>
+      <td>830</td>
+      <td>10.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6</td>
+      <td>28</td>
+      <td>3</td>
+      <td>15.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1599</th>
+      <td>1600</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>2</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2418</th>
+      <td>2419</td>
+      <td>13.0</td>
+      <td>162</td>
+      <td>0</td>
+      <td>0</td>
+      <td>110</td>
+      <td>36</td>
+      <td>412</td>
+      <td>55.0</td>
+      <td>8</td>
+      <td>...</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>5</td>
+      <td>16</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>1166</th>
+      <td>1167</td>
+      <td>163.0</td>
+      <td>24</td>
+      <td>0</td>
+      <td>0</td>
+      <td>32</td>
+      <td>217</td>
+      <td>27</td>
+      <td>18.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>93</td>
+      <td>0</td>
+      <td>14</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>73</td>
+    </tr>
+    <tr>
+      <th>3540</th>
+      <td>3541</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+      <td>5</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1787</th>
+      <td>1788</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1054</th>
+      <td>1055</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>921</th>
+      <td>922</td>
+      <td>1.0</td>
+      <td>27</td>
+      <td>1</td>
+      <td>278</td>
+      <td>129</td>
+      <td>1</td>
+      <td>45</td>
+      <td>185.0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>53</td>
+      <td>50</td>
+      <td>0</td>
+      <td>0</td>
+      <td>92</td>
+      <td>13</td>
+      <td>0</td>
+      <td>152</td>
+      <td>0</td>
+      <td>10</td>
+    </tr>
+  </tbody>
+</table>
+<p>17 rows × 154 columns</p>
+</div>
+
+
+
+
+```python
+sampledata = [{'otu_ids': clean_sample_df[sample].index.values.tolist(), 
+               "sample_values": clean_sample_df[sample].values.tolist()}]
+
+sampledata
+```
+
+
+
+
+    [{'otu_ids': [1794,
+       2721,
+       908,
+       2858,
+       1313,
+       1723,
+       943,
+       2538,
+       1727,
+       829,
+       1599,
+       2418,
+       1166,
+       3540,
+       1787,
+       1054,
+       921],
+      'sample_values': [430, 33, 20, 19, 11, 9, 9, 8, 6, 6, 4, 4, 4, 3, 2, 2, 2]}]
+
+
